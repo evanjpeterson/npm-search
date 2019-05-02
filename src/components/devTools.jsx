@@ -17,11 +17,19 @@ const DevTools = ({
       flexDirection: 'column'
     })}
   >
-    <div>
+    <div
+      css={{
+        display: 'flex'
+      }}
+    >
       <input type="checkbox" onClick={onDarkModeToggle} />
       {language.darkMode}
     </div>
-    <div>
+    <div
+      css={{
+        display: 'flex'
+      }}
+    >
       <input type="checkbox" onClick={onApiModeToggle} />
       {language.breakApi}
     </div>

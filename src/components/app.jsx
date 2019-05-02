@@ -121,7 +121,12 @@ const App = () => {
             overflow: 'auto',
             margin: `${theme.sizes.base(
               3
-            )} ${theme.sizes.base(4)}`
+            )} ${theme.sizes.base(4)}`,
+            [theme.breakpoints.small]: {
+              margin: `${theme.sizes.base(
+                2
+              )} ${theme.sizes.base()}`
+            }
           })}
         >
           {hasError ? (

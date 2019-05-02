@@ -3,6 +3,9 @@ const oldNpmRed = '#9B2C2E'
 
 export const defaultTheme = {
   borderRadius: '4px',
+  breakpoints: {
+    small: '@media (max-width: 480px)'
+  },
   fonts: {
     serif: 'monospace, serif',
     sansSerif: 'Arial, sans-serif'
