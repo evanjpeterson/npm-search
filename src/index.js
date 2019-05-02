@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { defaultTheme } from './themes'
+import { mockResponse } from './mockData'
 
 const App = () => {
   const [query, setQuery] = useState('')
@@ -23,6 +24,11 @@ const App = () => {
       setSearchPending(false)
       return
     }
+
+    // TODO use real data again
+    setResults(mockResponse.map(result => result.package))
+    setSearchPending(false)
+    return
 
     // Returns a max of 25 results by default, which should be fine.
     // See: api-docs.npms.io
@@ -68,7 +74,7 @@ const App = () => {
       <div
         className="App"
         css={theme => ({
-          fontFamily: 'monospace',
+          fontFamily: 'Arial',
           backgroundColor: theme.colors.background,
           height: '100vh',
           width: '100vw',
@@ -82,7 +88,7 @@ const App = () => {
             css={theme => ({
               position: 'absolute',
               left: theme.sizes.base(2.5),
-              top: '15px',
+              top: '13px',
               color: theme.colors.ternary
             })}
           >
@@ -124,69 +130,86 @@ const App = () => {
             margin: `${theme.sizes.base(3)} 0`
           })}
         >
-          {results.map(result => (
-            <div
-              key={result.name}
-              css={theme => ({
-                background:
-                  theme.colors.searchResult.background,
-                borderRadius: theme.borderRadius,
-                padding: theme.sizes.base(2),
-                margin: `${theme.sizes.base()}`
-              })}
-            >
-              <div>
-                <a
-                  href={result.links.npm}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  css={theme => ({
-                    fontWeight: 'bold',
-                    color: theme.colors.primary,
-                    fontSize: theme.sizes.primary
-                  })}
-                >
-                  {result.name}
-                </a>
-                <span
-                  css={theme => ({
-                    color: theme.colors.secondary,
-                    fontSize: theme.sizes.secondary,
-                    marginLeft: theme.sizes.base(2)
-                  })}
-                >
-                  @ {result.version}
-                </span>
-              </div>
+          {results.length ? (
+            results.map(result => (
               <div
+                key={result.name}
                 css={theme => ({
-                  color: theme.colors.secondary,
-                  fontSize: theme.sizes.secondary
+                  fontFamily: 'monospace',
+                  background:
+                    theme.colors.searchResult.background,
+                  borderRadius: theme.borderRadius,
+                  padding: theme.sizes.base(2),
+                  margin: `${theme.sizes.base()}`,
+                  width: '100%'
                 })}
               >
-                {result.description}
-              </div>
-              <div>
-                <span
+                <div>
+                  <a
+                    href={result.links.npm}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    css={theme => ({
+                      fontWeight: 'bold',
+                      color: theme.colors.primary,
+                      fontSize: theme.sizes.primary
+                    })}
+                  >
+                    {result.name}
+                  </a>
+                  <span
+                    css={theme => ({
+                      color: theme.colors.secondary,
+                      fontSize: theme.sizes.secondary,
+                      marginLeft: theme.sizes.base(2)
+                    })}
+                  >
+                    @ {result.version}
+                  </span>
+                </div>
+                <div
                   css={theme => ({
-                    color: theme.colors.ternary,
+                    color: theme.colors.secondary,
                     fontSize: theme.sizes.secondary
                   })}
                 >
-                  last published
-                </span>
-                <span
-                  css={theme => ({
-                    color: theme.colors.secondary,
-                    fontSize: theme.sizes.secondary,
-                    marginLeft: theme.sizes.base(2)
-                  })}
-                >
-                  {new Date(result.date).toLocaleString()}
-                </span>
+                  {result.description}
+                </div>
+                <div>
+                  <span
+                    css={theme => ({
+                      color: theme.colors.ternary,
+                      fontSize: theme.sizes.secondary
+                    })}
+                  >
+                    last published
+                  </span>
+                  <span
+                    css={theme => ({
+                      color: theme.colors.secondary,
+                      fontSize: theme.sizes.secondary,
+                      marginLeft: theme.sizes.base(2)
+                    })}
+                  >
+                    {new Date(result.date).toLocaleString()}
+                  </span>
+                </div>
               </div>
+            ))
+          ) : (
+            <div
+              css={theme => ({
+                color: theme.colors.ternary,
+                fontSize: theme.sizes.primary,
+                marginTop: theme.sizes.base(2),
+                marginLeft: theme.sizes.base(2)
+              })}
+            >
+              {query
+                ? 'Hmm, not finding any results for that'
+                : 'Results appear as you type'}
             </div>
-          ))}
+          )}
         </div>
       </div>
     </ThemeProvider>
