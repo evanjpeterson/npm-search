@@ -7,12 +7,11 @@ const Result = ({ result }) => (
   <div
     key={result.name}
     css={theme => ({
-      fontFamily: 'monospace',
+      fontFamily: theme.fonts.serif,
       background: theme.colors.searchResult.background,
       borderRadius: theme.borderRadius,
       padding: theme.sizes.base(2),
-      margin: `${theme.sizes.base()}`,
-      width: '100%'
+      margin: `${theme.sizes.base()}`
     })}
   >
     <div>

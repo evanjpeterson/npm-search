@@ -1,4 +1,4 @@
-export const api = {
+export const defaultApi = {
   search: async query => {
     // Returns a max of 25 results by default, which should be fine.
     // See: api-docs.npms.io
@@ -14,5 +14,12 @@ export const api = {
     const results = json.map(result => result.package)
 
     return results
+  }
+}
+
+export const brokenApi = {
+  search: async () => {
+    await setTimeout(() => {}, 5000)
+    throw new Error(`Mock network error`)
   }
 }

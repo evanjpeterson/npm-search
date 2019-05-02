@@ -8,9 +8,11 @@ import SearchField from './searchField'
 import Result from './result'
 import Message from './message'
 import { language } from '../language'
-import { api } from '../api'
+import { defaultApi } from '../api'
 
 const App = () => {
+  const [theme, setTheme] = useState(defaultTheme)
+  const [api, setApi] = useState(defaultApi)
   const [query, setQuery] = useState('')
   const [debouncedQuery] = useDebounce(query, 400)
   const [searchPending, setSearchPending] = useState(false)
@@ -45,7 +47,7 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme}>
       <Global
         styles={css`
           * {
@@ -53,30 +55,53 @@ const App = () => {
           }
           body {
             margin: 0;
+            background: ${theme.colors.background};
           }
         `}
       />
       <div
-        className="App"
         css={theme => ({
-          fontFamily: 'Arial',
-          backgroundColor: theme.colors.background,
-          height: '100vh',
-          width: '100vw',
+          fontFamily: theme.fonts.sansSerif,
           display: 'flex',
           flexDirection: 'column',
-          padding: theme.sizes.base(4)
+          height: '100vh'
         })}
       >
-        <SearchField
-          query={query}
-          onQueryChange={onQueryChange}
-          searchPending={searchPending}
-        />
+        <div
+          css={theme => ({
+            background: theme.colors.banner,
+            padding: theme.sizes.base(2),
+            paddingBottom: theme.sizes.base(4),
+            boxShadow: `0 5px 5px 1px ${
+              theme.colors.shadow
+            }`,
+            borderRadius: `0 0 ${theme.borderRadius} ${
+              theme.borderRadius
+            }`
+          })}
+        >
+          <div
+            css={theme => ({
+              fontFamily: theme.fonts.serif,
+              color: theme.colors.title,
+              fontSize: theme.sizes.title,
+              marginBottom: theme.sizes.base(2)
+            })}
+          >
+            {language.title}
+          </div>
+          <SearchField
+            query={query}
+            onQueryChange={onQueryChange}
+            searchPending={searchPending}
+          />
+        </div>
         <div
           css={theme => ({
             overflow: 'auto',
-            margin: `${theme.sizes.base(3)} 0`
+            margin: `${theme.sizes.base(
+              3
+            )} ${theme.sizes.base(4)}`
           })}
         >
           {hasError ? (

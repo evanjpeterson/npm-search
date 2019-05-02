@@ -1,5 +1,6 @@
 export const language = {
-  placeholder: 'Search NPM',
+  title: 'npm search',
+  placeholder: 'Search packages',
   lastPublished: 'last published',
   unexpectedError:
     "Sorry, something unexpected happened :'(",
