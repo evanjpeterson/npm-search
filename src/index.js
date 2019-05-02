@@ -3,15 +3,24 @@ import { jsx, css, Global } from '@emotion/core'
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvider } from 'emotion-theming'
+import { useDebounce } from 'use-debounce'
+import {
+  faSearch,
+  faCompactDisc
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { defaultTheme } from './themes'
 
 const App = () => {
   const [query, setQuery] = useState('')
+  const [debouncedQuery] = useDebounce(query, 400)
+  const [searchPending, setSearchPending] = useState(false)
   const [results, setResults] = useState([])
 
   useEffect(() => {
     if (!query) {
       setResults([])
+      setSearchPending(false)
       return
     }
 
@@ -31,14 +40,17 @@ const App = () => {
       })
       .then(json => {
         setResults(json.map(result => result.package))
+        setSearchPending(false)
       })
       .catch(error => {
         // TODO something with the error, give a nice user-friendly message
+        setSearchPending(false)
       })
-  }, [query])
+  }, [debouncedQuery])
 
   const handleQueryChange = e => {
     setQuery(e.target.value)
+    setSearchPending(true)
   }
 
   return (
@@ -65,23 +77,47 @@ const App = () => {
           padding: theme.sizes.base(4)
         })}
       >
-        <input
-          type="text"
-          value={query}
-          placeholder="Search NPM"
-          onChange={handleQueryChange}
-          css={theme => ({
-            color: theme.colors.primary,
-            background: theme.colors.searchField.background,
-            border: `1px solid ${
-              theme.colors.searchField.border
-            }`,
-            minHeight: theme.sizes.base(6),
-            borderRadius: theme.borderRadius,
-            fontSize: theme.sizes.primary,
-            paddingLeft: theme.sizes.base(2)
-          })}
-        />
+        <div css={{ position: 'relative' }}>
+          <div
+            css={theme => ({
+              position: 'absolute',
+              left: theme.sizes.base(2.5),
+              top: '15px',
+              color: theme.colors.ternary
+            })}
+          >
+            {searchPending ? (
+              <FontAwesomeIcon
+                icon={faCompactDisc}
+                size="lg"
+                spin
+              />
+            ) : (
+              <FontAwesomeIcon icon={faSearch} size="lg" />
+            )}
+          </div>
+          <input
+            type="text"
+            value={query}
+            placeholder="Search NPM"
+            onChange={handleQueryChange}
+            css={theme => ({
+              color: theme.colors.primary,
+              fontFamily: 'Arial',
+              background:
+                theme.colors.searchField.background,
+              border: `1px solid ${
+                theme.colors.searchField.border
+              }`,
+              minHeight: theme.sizes.base(6),
+              borderRadius: theme.borderRadius,
+              fontSize: theme.sizes.primary,
+              paddingLeft: theme.sizes.base(6),
+              paddingRight: theme.sizes.base(2),
+              width: '100%'
+            })}
+          />
+        </div>
         <div
           css={theme => ({
             overflow: 'auto',
@@ -103,6 +139,7 @@ const App = () => {
                 <a
                   href={result.links.npm}
                   target="_blank"
+                  rel="noopener noreferrer"
                   css={theme => ({
                     fontWeight: 'bold',
                     color: theme.colors.primary,
