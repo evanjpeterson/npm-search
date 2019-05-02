@@ -11,7 +11,6 @@ const Result = ({ result }) => {
   return (
     <div
       // The entire tile is clickable for the mobile folks.
-      key={result.name}
       onClick={createOnClick(result.links.npm, result.name)}
       css={theme => ({
         fontFamily: theme.fonts.serif,

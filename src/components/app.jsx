@@ -137,7 +137,7 @@ const App = () => {
             )
           ) : results.length ? (
             results.map(result => (
-              <Result result={result} />
+              <Result key={result.name} result={result} />
             ))
           ) : !query ? (
             <Message message={language.initialMessage} />
