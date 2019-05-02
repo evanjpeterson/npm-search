@@ -31,6 +31,22 @@ export const defaultTheme = {
   }
 }
 
-export const nightTheme = {
-  ...defaultTheme
+export const darkTheme = {
+  ...defaultTheme,
+  colors: {
+    ...defaultTheme.colors,
+    banner: '#333',
+    background: '#444',
+    primary: '#FFF',
+    secondary: '#EEE',
+    ternary: '#DDD',
+    shadow: '#222',
+    searchResult: {
+      background: '#555'
+    },
+    searchField: {
+      background: '#555',
+      border: '#555'
+    }
+  }
 }

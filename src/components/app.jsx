@@ -3,12 +3,13 @@ import { jsx, css, Global } from '@emotion/core'
 import React, { useState, useEffect } from 'react'
 import { ThemeProvider } from 'emotion-theming'
 import { useDebounce } from 'use-debounce'
-import { defaultTheme } from '../themes'
+import { defaultTheme, darkTheme } from '../themes'
 import SearchField from './searchField'
 import Result from './result'
 import Message from './message'
 import { language } from '../language'
-import { defaultApi } from '../api'
+import { defaultApi, brokenApi } from '../api'
+import DevTools from './devTools'
 
 const App = () => {
   const [theme, setTheme] = useState(defaultTheme)
@@ -32,6 +33,7 @@ const App = () => {
         const results = await api.search(query)
         setResults(results)
       } catch {
+        setResults([])
         setHasError(true)
       }
       setSearchPending(false)
@@ -44,6 +46,14 @@ const App = () => {
     setQuery(e.target.value)
     setSearchPending(true)
     setHasError(false)
+  }
+
+  const onDarkModeToggle = e => {
+    setTheme(e.target.checked ? darkTheme : defaultTheme)
+  }
+
+  const onApiModeToggle = e => {
+    setApi(e.target.checked ? brokenApi : defaultApi)
   }
 
   return (
@@ -85,10 +95,17 @@ const App = () => {
               fontFamily: theme.fonts.serif,
               color: theme.colors.title,
               fontSize: theme.sizes.title,
-              marginBottom: theme.sizes.base(2)
+              marginBottom: theme.sizes.base(2),
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             })}
           >
             {language.title}
+            <DevTools
+              onApiModeToggle={onApiModeToggle}
+              onDarkModeToggle={onDarkModeToggle}
+            />
           </div>
           <SearchField
             query={query}
@@ -105,7 +122,11 @@ const App = () => {
           })}
         >
           {hasError ? (
-            <Message message={language.unexpectedError} />
+            api === brokenApi ? (
+              <Message message={language.expectedError} />
+            ) : (
+              <Message message={language.unexpectedError} />
+            )
           ) : results.length ? (
             results.map(result => (
               <Result result={result} />

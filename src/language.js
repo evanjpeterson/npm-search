@@ -1,9 +1,12 @@
 export const language = {
-  title: 'npm search',
-  placeholder: 'Search packages',
+  breakApi: 'break the api?',
+  darkMode: 'dark mode',
+  expectedError: 'Great, you broke it',
+  initialMessage: 'Results appear as you type',
   lastPublished: 'last published',
-  unexpectedError:
-    "Sorry, something unexpected happened :'(",
   noResults: 'Hmm, not finding any results for that',
-  initialMessage: 'Results appear as you type'
+  placeholder: 'Search packages',
+  title: 'npm search',
+  unexpectedError:
+    "Sorry, something unexpected happened :'("
 }
