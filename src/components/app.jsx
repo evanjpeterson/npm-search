@@ -21,7 +21,7 @@ const App = () => {
   const [hasError, setHasError] = useState(false)
 
   useEffect(() => {
-    if (!query) {
+    if (!debouncedQuery) {
       // User has cleared out the query, so clear out the results list
       setResults([])
       setSearchPending(false)
@@ -30,7 +30,7 @@ const App = () => {
 
     async function getResults() {
       try {
-        const results = await api.search(query)
+        const results = await api.search(debouncedQuery)
         setResults(results)
       } catch {
         setResults([])
@@ -70,6 +70,7 @@ const App = () => {
         `}
       />
       <div
+        // App container -- holds the top banner and the results area
         css={theme => ({
           fontFamily: theme.fonts.sansSerif,
           display: 'flex',
@@ -78,6 +79,7 @@ const App = () => {
         })}
       >
         <div
+          // Banner around the search field
           css={theme => ({
             background: theme.colors.banner,
             padding: theme.sizes.base(2),
@@ -114,6 +116,7 @@ const App = () => {
           />
         </div>
         <div
+          // Results/Messages area
           css={theme => ({
             overflow: 'auto',
             margin: `${theme.sizes.base(
