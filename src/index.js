@@ -17,6 +17,7 @@ const App = () => {
   const [debouncedQuery] = useDebounce(query, 400)
   const [searchPending, setSearchPending] = useState(false)
   const [results, setResults] = useState([])
+  const [hasError, setHasError] = useState(false)
 
   useEffect(() => {
     if (!query) {
@@ -25,10 +26,12 @@ const App = () => {
       return
     }
 
-    // TODO use real data again
+    // TODO clean up mock data
+    /*
     setResults(mockResponse.map(result => result.package))
     setSearchPending(false)
     return
+    */
 
     // Returns a max of 25 results by default, which should be fine.
     // See: api-docs.npms.io
@@ -37,7 +40,6 @@ const App = () => {
     )
       .then(response => {
         if (!response.ok) {
-          // TODO something with the error
           throw new Error(
             `Network error: ${response.status}`
           )
@@ -48,8 +50,8 @@ const App = () => {
         setResults(json.map(result => result.package))
         setSearchPending(false)
       })
-      .catch(error => {
-        // TODO something with the error, give a nice user-friendly message
+      .catch(() => {
+        setHasError(true)
         setSearchPending(false)
       })
   }, [debouncedQuery])
@@ -57,6 +59,7 @@ const App = () => {
   const handleQueryChange = e => {
     setQuery(e.target.value)
     setSearchPending(true)
+    setHasError(false)
   }
 
   return (
@@ -107,6 +110,7 @@ const App = () => {
             value={query}
             placeholder="Search NPM"
             onChange={handleQueryChange}
+            autoFocus={true}
             css={theme => ({
               color: theme.colors.primary,
               fontFamily: 'Arial',
@@ -130,7 +134,20 @@ const App = () => {
             margin: `${theme.sizes.base(3)} 0`
           })}
         >
-          {results.length ? (
+          {hasError ? (
+            <div
+              css={theme => ({
+                color: theme.colors.ternary,
+                fontSize: theme.sizes.primary,
+                marginTop: theme.sizes.base(2),
+                marginLeft: theme.sizes.base(2)
+              })}
+            >
+              Sorry, something unexpected happened :'(
+              <br />
+              Please try again in a moment
+            </div>
+          ) : results.length ? (
             results.map(result => (
               <div
                 key={result.name}
@@ -206,7 +223,9 @@ const App = () => {
               })}
             >
               {query
-                ? 'Hmm, not finding any results for that'
+                ? searchPending
+                  ? ''
+                  : 'Hmm, not finding any results for that'
                 : 'Results appear as you type'}
             </div>
           )}
