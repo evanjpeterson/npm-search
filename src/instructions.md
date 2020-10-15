@@ -1,4 +1,4 @@
-# Gremlin Technical Take Home
+# Technical Take Home
 
 > Build NPM package search tool
 
